@@ -55,6 +55,22 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    /*
+     ----- New implemented Code -----
+     */
+    
+    // In order to control every Parameter and it's value of a plugin
+    // a so called Audio Processor Value Tree State Object is needed.
+    // It will be attached to the actual instance of the Processor when created
+    // (*this) there will be no undo manager (nullptr),
+    // the Identifier Object Reference given will just be a string.
+    // Instead of providing a initializer list we can provide a function
+    // to create those parameters, which is a bit more flexible.
+    
+    juce::AudioProcessorValueTreeState apvts
+        { *this, nullptr, "Parameters", createParameters() };
+    static juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
 
 private:
     //==============================================================================

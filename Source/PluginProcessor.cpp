@@ -166,7 +166,11 @@ bool LudEQAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* LudEQAudioProcessor::createEditor()
 {
-    return new LudEQAudioProcessorEditor (*this);
+    /*
+     -----  Changes to see how it looks -----
+     */
+    //return new LudEQAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 //==============================================================================
@@ -188,4 +192,101 @@ void LudEQAudioProcessor::setStateInformation (const void* data, int sizeInBytes
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new LudEQAudioProcessor();
+}
+
+/*
+ ----- New implemented Code -----
+ */
+
+// Extremely long name of return type.
+juce::AudioProcessorValueTreeState::ParameterLayout
+    LudEQAudioProcessor::createParameters()
+{
+    // Create empty layout
+    juce::AudioProcessorValueTreeState::ParameterLayout ctrl_layout;
+    
+    // Add Low Cut Parameter
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+        "Low Cut",
+        "Low Cut",
+        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
+        20.f
+        )
+    );
+    
+    // Add High Cut Parameter
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+        "High Cut",
+        "High Cut",
+        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
+        20000.f
+        )
+    );
+    
+    // Add Peak Freq Parameter
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+        "Peak Freq",
+        "Peak Freq",
+        juce::NormalisableRange<float>(20.f, 20000.f, 1.f, 1.f),
+        1000.f
+        )
+    );
+    
+    // Add Peak Gain Parameter
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+        "Peak Gain",
+        "Peak Gain",
+        juce::NormalisableRange<float>(-12.f, 12.f, 0.1f, 1.f),
+        0.f
+        )
+    );
+    
+    // Add Peak Q Parameter
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterFloat>
+        (
+        "Peak Q",
+        "Peak Q",
+        juce::NormalisableRange<float>(0.1f, 10.f, 0.05f, 1.f),
+        1.f
+        )
+    );
+    
+    // The steepness of the Cutoff Frequencies shoould be selectable
+    // Therefore we need a String Array with the options.
+    juce::StringArray dB_per_oct;
+    for (int i = 0; i < 4; ++i)
+    {
+        juce::String optn;
+        optn << (12 + 12*i) << "dB/Oct";
+        dB_per_oct.add(optn);
+    }
+    
+    // Add those Options for High and Lowcut Slope.
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterChoice>
+        ("Low Cut Slope", "Low Cut Slope", dB_per_oct, 0)
+     );
+    
+    ctrl_layout.add
+    (
+        std::make_unique<juce::AudioParameterChoice>
+        ("High Cut Slope", "High Cut Slope", dB_per_oct, 0)
+     );
+    
+    return ctrl_layout;
 }

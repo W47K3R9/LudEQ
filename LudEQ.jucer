@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="skm3PK" name="LudEQ" projectType="audioplug" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
+              pluginFormats="buildAU,buildStandalone">
   <MAINGROUP id="PuNLdB" name="LudEQ">
     <GROUP id="{4C4EF533-4172-C09A-2A73-01761FA99F93}" name="Source">
       <FILE id="O9tTtU" name="PluginProcessor.cpp" compile="1" resource="0"
